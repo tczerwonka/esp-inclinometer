@@ -23,6 +23,7 @@ public:
             cfg.freq_write = 80000000;
             cfg.freq_read  = 16000000;
             cfg.freq_write = 40000000;
+            cfg.freq_write = 30000000;
             cfg.freq_read  = 8000000;
 
             cfg.spi_3wire = false;

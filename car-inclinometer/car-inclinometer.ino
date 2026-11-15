@@ -1,10 +1,12 @@
 // Car Inclinometer using ESP32S3 and MPU6050 with GC9A01 Round Display
 // An open source project by LazyDays Creation https://www.facebook.com/lazydayyt
+//
+// modified Nov 2026 T Czerwonka tczerwonka@gmail.com
+// using LSM6DS3 instead of MPU6050
 
 #include <Arduino.h>
 #include <lvgl.h>
 #include <Wire.h>
-//#include <Adafruit_MPU6050.h>
 #include <Adafruit_LSM6DS3.h>
 #include <Adafruit_Sensor.h>
 
@@ -127,16 +129,13 @@ static void setInclination(float pitch, float roll)
     }
 }
 
-// ---------------- MPU6050 ----------------
 // Flip these if the display moves the wrong way for your mounting
-//  Disclaimer : This project is part of a cockpit dashboard for an FPV RC plane. It is a hobby build for unmanned model aircraft only.
 
 static const float ROLL_SIGN = 1.0f;
 static const float PITCH_SIGN = -1.0f;
 
 static const float ALPHA = 0.98f; // complementary filter: gyro weight (higher = smoother, slower drift correction)
 
-//Adafruit_MPU6050 mpu;
 Adafruit_LSM6DS3 lsm6ds3;
 
 static bool sensorOk = false;
@@ -159,7 +158,6 @@ static void calibrateSensor()
     for (int i = 0; i < N; i++)
     {
         sensors_event_t a, g, t;
-        //mpu.getEvent(&a, &g, &t);
         lsm6ds3.getEvent(&a, &g, &t);
         float r, p;
         accelAngles(a, r, p);
@@ -190,7 +188,6 @@ static void updateSensor()
     if (dt > 0.1f) dt = 0.1f;
 
     sensors_event_t a, g, t;
-    //mpu.getEvent(&a, &g, &t);
     lsm6ds3.getEvent(&a, &g, &t);
 
     float accRoll, accPitch;
@@ -253,20 +250,8 @@ if (err == 0 && Wire.available()) {
     ui_init();
     setInclination(0, 0);
 
-    //Wire.setPins(PIN_SDA, PIN_SCL);
-    //if (mpu.begin())
-    //{
-    //   Wire.setClock(400000);
-    //  mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
-    //    mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-    //    mpu.setFilterBandwidth(MPU6050_BAND_44_HZ);
-    //   delay(100);
-    //    calibrateSensor(); // keep the board still for ~1 s
-    //    sensorOk = true;
-    //}
 
     if (lsm6ds3.begin_I2C(0x6B,&Wire))
-    //if (lsm6ds3.begin_I2C(&Wire))
     {
         Wire.setClock(400000);
 

@@ -6,6 +6,8 @@
 // Link-Loss Watchdog, Caution/Danger Angle Colors, and Pitch Percent Slope
 // this receiver MAC: AC:27:6E:B0:D3:80
 
+// uses the Waveshare ESP32-S3
+
 #include <Arduino.h>
 #include <lvgl.h>
 #include <WiFi.h>
